@@ -87,10 +87,10 @@ rule "低头":
 rule "按住前进键持续5秒":
     @Event eachPlayer
     @Condition guessing_active == false
-    @Condition eventPlayer.player_word == "按住前进键持续5秒"
+    @Condition eventPlayer.player_word == "按住前进键持续{}秒".format(WordNumber.KEEPMOVINGFORWARD)
     @Condition eventPlayer.getThrottle() == vect(0, 0, 1)
     
-    eventPlayer.conditionJudgment(5)
+    eventPlayer.conditionJudgment(WordNumber.KEEPMOVINGFORWARD)
     illegal_kill()
 
 rule "按下后退键":
@@ -157,16 +157,16 @@ rule "用光弹匣":
 rule "攻击距离自身25m以外的敌人":
     @Event playerDealtDamage
     @Condition guessing_active == false
-    @Condition eventPlayer.player_word == "攻击距离自身25m以外的敌人"
-    @Condition distance(attacker, victim) >= 25
+    @Condition eventPlayer.player_word == "攻击距离自身{}m以外的敌人".format(WordNumber.ENEMYDISTANCEOUT)
+    @Condition distance(attacker, victim) >= WordNumber.ENEMYDISTANCEOUT
 
     illegal_kill()
 
 rule "攻击距离自身3m以内的敌人":
     @Event playerDealtDamage
     @Condition guessing_active == false
-    @Condition eventPlayer.player_word == "攻击距离自身3m以内的敌人"
-    @Condition victim in getPlayersInRadius(eventPlayer, 3, Team.ALL, LosCheck.SURFACES) == true
+    @Condition eventPlayer.player_word == "攻击距离自身{}m以内的敌人".format(WordNumber.ENEMYDISTANCEIN)
+    @Condition victim in getPlayersInRadius(eventPlayer, WordNumber.ENEMYDISTANCEIN, Team.ALL, LosCheck.SURFACES) == true
 
     illegal_kill()
 
@@ -309,8 +309,8 @@ rule "造成击退":
 rule "造成一次大于100点的伤害":
     @Event playerDealtDamage
     @Condition guessing_active == false
-    @Condition eventPlayer.player_word == "造成一次大于100点的伤害"
-    @Condition eventDamage > 50
+    @Condition eventPlayer.player_word == "造成一次大于{}点的伤害".format(WordNumber.ONETIMEDAMAGE)
+    @Condition eventDamage > WordNumber.ONETIMEDAMAGE
     
     illegal_kill()
 
@@ -325,10 +325,10 @@ rule "造成一次地形杀":
 rule "累计造成500点伤害":
     @Event playerDealtDamage
     @Condition guessing_active == false
-    @Condition eventPlayer.player_word == "累计造成500点伤害"
+    @Condition eventPlayer.player_word == "累计造成{}点伤害".format(WordNumber.ALLDAMAGE)
     
     eventPlayer.damage_amount += eventDamage
-    if eventPlayer.damage_amount >= 500:
+    if eventPlayer.damage_amount >= WordNumber.ALLDAMAGE:
         eventPlayer.damage_amount = 0
         illegal_kill()
 
@@ -339,20 +339,20 @@ rule "造成击杀":
     
     illegal_kill()
 
-rule "30S内不造成伤害":
+rule "30秒内不造成伤害":
     @Event eachPlayer
     @Condition guessing_active == false
-    @Condition eventPlayer.player_word == "30S内不造成伤害"
+    @Condition eventPlayer.player_word == "{}秒内不造成伤害".format(WordNumber.DONTHURT)
     @Condition eventPlayer.player_dealt_damage_flag == false
     
-    eventPlayer.conditionJudgment(30)
+    eventPlayer.conditionJudgment(WordNumber.DONTHURT)
     illegal_kill()
     
 
-rule "30S内不造成伤害：恢复计时":
+rule "30秒内不造成伤害：恢复计时":
     @Event playerDealtDamage
     @Condition guessing_active == false
-    @Condition eventPlayer.player_word == "30S内不造成伤害"
+    @Condition eventPlayer.player_word == "{}秒内不造成伤害".format(WordNumber.DONTHURT)
     
     eventPlayer.player_dealt_damage_flag = true
     wait(0.25)
@@ -362,28 +362,28 @@ rule "30S内不造成伤害：恢复计时":
 rule "持续移动10秒钟":
     @Event eachPlayer
     @Condition guessing_active == false
-    @Condition eventPlayer.player_word == "持续移动10秒钟"
+    @Condition eventPlayer.player_word == "持续移动{}秒钟".format(WordNumber.KEEPMOVING)
     @Condition eventPlayer.isMoving() == true
     
-    eventPlayer.conditionJudgment(10)
+    eventPlayer.conditionJudgment(WordNumber.KEEPMOVING)
     illegal_kill()
 
-rule "在空中待一秒钟":
+rule "在空中待1秒钟":
     @Event eachPlayer
     @Condition guessing_active == false
-    @Condition eventPlayer.player_word == "在空中待一秒钟"
+    @Condition eventPlayer.player_word == "在空中待{}秒钟".format(WordNumber.INAIR)
     @Condition eventPlayer.isInAir() == true
     
-    eventPlayer.conditionJudgment(1, 0.25)
+    eventPlayer.conditionJudgment(WordNumber.INAIR, 0.25)
     illegal_kill()
 
 rule "5秒内不移动":
     @Event eachPlayer
     @Condition guessing_active == false
-    @Condition eventPlayer.player_word == "5秒内不移动"
+    @Condition eventPlayer.player_word == "{}秒内不移动".format(WordNumber.DONTMOVE)
     @Condition eventPlayer.isStanding() == true
     
-    eventPlayer.conditionJudgment(5)
+    eventPlayer.conditionJudgment(WordNumber.DONTMOVE)
     illegal_kill()
 
 rule "移速过快":
@@ -397,8 +397,8 @@ rule "移速过快":
 rule "距离地面6m以上":
     @Event eachPlayer
     @Condition guessing_active == false
-    @Condition eventPlayer.player_word == "距离地面6m以上"
-    @Condition eventPlayer.getAltitude() > 6
+    @Condition eventPlayer.player_word == "距离地面{}m以上".format(WordNumber.GROUNDDISTANCE)
+    @Condition eventPlayer.getAltitude() > WordNumber.GROUNDDISTANCE
     
     illegal_kill()
 
@@ -430,20 +430,20 @@ rule "自己治疗自己":
 rule "存活100秒":
     @Event eachPlayer
     @Condition guessing_active == false
-    @Condition eventPlayer.player_word == "存活100秒"
+    @Condition eventPlayer.player_word == "存活{}秒".format(WordNumber.SURVIVALTIME)
 
-    eventPlayer.conditionJudgment(100)
+    eventPlayer.conditionJudgment(WordNumber.SURVIVALTIME)
     illegal_kill()
 
 # 观察/互动类
 rule "凝视敌人超过五秒":
     @Event eachPlayer
     @Condition guessing_active == false
-    @Condition eventPlayer.player_word == "凝视敌人超过五秒"
+    @Condition eventPlayer.player_word == "凝视敌人超过{}秒".format(WordNumber.STAREENEMY)
     @Condition eventPlayer.isInViewAngle(eventPlayer.getRealPlayerClosestToReticle(Team.ALL), 20) == true
     @Condition isInLoS(eventPlayer, eventPlayer.getRealPlayerClosestToReticle(Team.ALL)) == true
     
-    eventPlayer.conditionJudgment(5)
+    eventPlayer.conditionJudgment(WordNumber.STAREENEMY)
     illegal_kill()
 
 rule "头像框火力全开":

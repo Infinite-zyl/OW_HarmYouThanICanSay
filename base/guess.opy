@@ -73,7 +73,6 @@ rule "退出猜词环节恢复玩家状态":
 
 rule "时间耗尽进入下 注环节/猜词环节":
     @Condition guessing_active == true
-    @Condition betting_switch == true
     @Condition guess_timmer == 0
     @Condition guessing_part == GuessingPart.QA
 
@@ -151,12 +150,13 @@ rule "猜词环节确认答案":
     else:
         guess_word_result = GuessResult.FAILURE
 
-
 rule "猜词环节击杀判定":
     @Event eachPlayer
     @Condition guessing_active == true and guessing_part == GuessingPart.GUESSING
     @Condition guess_word_result != GuessResult.NONE
 
+    # 延迟判定
+    wait(1.4)
     if guess_word_result == GuessResult.SUCCESS and eventPlayer != current_guesser:
         illegal_kill()
     if guess_word_result == GuessResult.SUCCESS and eventPlayer == current_guesser:
@@ -183,7 +183,8 @@ rule "正常结束猜词环节":
     @Condition guess_timmer > 0
     @Condition guessing_part == GuessingPart.GUESSING
 
-    wait(0.25) # 防止与跳过提问环节规则冲突
+    # 延迟判定
+    wait(1.6)
     guessing_active = false
     guessing_part = GuessingPart.NONE
     current_guesser = ""
@@ -198,3 +199,14 @@ rule "时间耗尽结束猜词环节":
     guessing_active = false
     guessing_part = GuessingPart.NONE
     current_guesser = ""
+
+rule "猜词玩家离开比赛":
+    @Event playerLeft
+    @Condition guessing_active == true
+    
+    wait(0.25) # 防止与跳过提问环节规则冲突
+    guessing_active = false
+    guessing_part = GuessingPart.NONE
+    current_guesser = ""
+    wait(1)
+    bigMessage(getAllPlayers(), "猜词玩家离开了比赛，无事发生")

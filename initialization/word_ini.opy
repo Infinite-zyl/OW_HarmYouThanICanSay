@@ -10,7 +10,7 @@ rule "初始化词库":
         "按下装填键",
         "抬头",
         "低头",
-        "按住前进键持续5秒",
+        "按住前进键持续{}秒".format(WordNumber.KEEPMOVINGFORWARD),
         "按下后退键",
         "使用交流菜单里的指令",
         "按下互动键",
@@ -22,8 +22,8 @@ rule "初始化词库":
 
     # 攻击类
     words_attack = [
-        "攻击距离自身25m以外的敌人",
-        "攻击距离自身3m以内的敌人",
+        "攻击距离自身{}m以外的敌人".format(WordNumber.ENEMYDISTANCEOUT),
+        "攻击距离自身{}m以内的敌人".format(WordNumber.ENEMYDISTANCEIN),
         "使用主要攻击",
         "使用次要攻击",
         "使用Shift技能",
@@ -41,20 +41,20 @@ rule "初始化词库":
         "攻击一名辅助角色",
         "造成爆头伤害",
         "造成击退",
-        "造成一次大于100点的伤害",
+        "造成一次大于{}点的伤害".format(WordNumber.ONETIMEDAMAGE),
         "造成一次地形杀",
-        "累计造成500点伤害",
+        "累计造成{}点伤害".format(WordNumber.ALLDAMAGE),
         "造成击杀",
-        "30S内不造成伤害",
+        "{}秒内不造成伤害".format(WordNumber.DONTHURT),
     ]
 
     # 移动/位置类
     words_movement = [
-        "持续移动10秒钟",
-        "在空中待一秒钟",
-        "5秒内不移动",
+        "持续移动{}秒钟".format(WordNumber.KEEPMOVING),
+        "在空中待{}秒钟".format(WordNumber.INAIR),
+        "{}秒内不移动".format(WordNumber.DONTMOVE),
         "移速过快",
-        "距离地面6m以上",
+        "距离地面{}m以上".format(WordNumber.GROUNDDISTANCE),
         "靠近一名敌人"
     ]
 
@@ -62,12 +62,12 @@ rule "初始化词库":
     words_survival = [
         "吃血包",
         "自己治疗自己",
-        "存活100秒"
+        "存活{}秒".format(WordNumber.SURVIVALTIME)
     ]
 
     # 观察/互动类
     words_interaction = [
-        "凝视敌人超过五秒",
+        "凝视敌人超过{}秒".format(WordNumber.STAREENEMY),
         "头像框火力全开"
     ]
 

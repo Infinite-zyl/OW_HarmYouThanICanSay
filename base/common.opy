@@ -1,11 +1,11 @@
 #!mainFile "../main.opy"
 
-rule "游戏结束条件":
-    @Event eachPlayer
-    @Condition isGameInProgress() == true
-    @Condition eventPlayer.getScore() >= finish_score
+# rule "游戏结束条件":
+#     @Event eachPlayer
+#     @Condition isGameInProgress() == true
+#     @Condition eventPlayer.getScore() >= finish_score
     
-    declarePlayerVictory(eventPlayer)
+#     declarePlayerVictory(eventPlayer)
 
 
 rule "自动重开":
@@ -29,11 +29,11 @@ rule "按住换弹键切换英雄":
     eventPlayer.setAllowedHeroes([i for i in getAllHeroes() if i != eventPlayer.getHero()])
     eventPlayer.setAllowedHeroes(getAllHeroes())
 
-
 rule "按下互动绑定":
     @Event eachPlayer
     @Condition guessing_active == false
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
+    @Condition eventPlayer.getRealPlayerClosestToReticle(Team.ALL) != null
     @Condition isInLoS(eventPlayer, eventPlayer.getRealPlayerClosestToReticle(Team.ALL)) == true
 
     # 找到新的绑定目标
@@ -49,6 +49,9 @@ rule "按下互动绑定":
     # 把自己加入新目标的绑定列表
     eventPlayer.bind_new_target.bound_players.append(eventPlayer)
 
+    # 小字体提示被绑定人数
+    smallMessage(eventPlayer.bind_new_target, "你已被【 {} 】人绑定".format(len(eventPlayer.bind_new_target.bound_players)))
+
 rule "小字体提示先绑定再互动":
     @Event eachPlayer
     @Condition guessing_active == false
@@ -59,7 +62,7 @@ rule "小字体提示先绑定再互动":
     wait(5)
     if not ruleCondition:
         return
-    smallMessage(eventPlayer, "按下【 {0} 】绑定你要整蛊的玩家".format(inputBindingString(Button.INTERACT)))
+    smallMessage(eventPlayer, "按下【 {} 】绑定你要整蛊的玩家".format(inputBindingString(Button.INTERACT)))
     wait(5)
     smallMessage(eventPlayer, "请先绑定目标再互动，否则不计得分！！！")
     if ruleCondition:

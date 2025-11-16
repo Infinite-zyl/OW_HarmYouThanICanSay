@@ -1,7 +1,7 @@
 settings {
     "main": {
-        "description": "规则同桌游：害你再心口难开\n创意&词条代码借鉴：傲娇青冥君#5952\n开发者：来一瓶可乐#51797\n当前为测试阶段",
-        "modeName": "不要做挑战 1.0.0"
+        "description": "规则同桌游：害你在心口难开\n创意&词条代码借鉴：傲娇青冥君#5952\n二次开发：来一瓶可乐#51797",
+        "modeName": "不要做挑战 v1.0.1 代码：02531"
     },
     "lobby": {
         "mapRotation": "afterGame",
@@ -23,7 +23,7 @@ settings {
                 "workshopGreenScreen"
             ],
             "enableSelfInitiatedRespawn": false,
-            "scoreToWin": 50
+            "scoreToWin": 40
         },
         "general": {
             "respawnTime%": 0,

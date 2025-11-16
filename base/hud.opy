@@ -8,7 +8,9 @@ rule "玩家头顶词条HUD显示":
     # 给非绑定玩家显示普通词条
     createInWorldText(
         getAllPlayers().exclude(eventPlayer).exclude(eventPlayer.bound_players) if guessing_active == false and eventPlayer.hasSpawned() == true else null, 
-        eventPlayer.player_word, 
+        "存活{}秒".format(WordNumber.SURVIVALTIME - eventPlayer.cJ_i - 1) 
+        if eventPlayer.player_word == "存活{}秒".format(WordNumber.SURVIVALTIME) 
+        else eventPlayer.player_word, 
         updateEveryFrame(eventPlayer.getEyePosition() + vect(0, 1.25, 0)), 
         2, 
         Clip.SURFACES, 
@@ -17,7 +19,9 @@ rule "玩家头顶词条HUD显示":
     # 给绑定玩家显示黄色词条
     createInWorldText(
         eventPlayer.bound_players if guessing_active == false and eventPlayer.hasSpawned() == true else null, 
-        eventPlayer.player_word, 
+        "存活{}秒".format(WordNumber.SURVIVALTIME - eventPlayer.cJ_i - 1) 
+        if eventPlayer.player_word == "存活{}秒".format(WordNumber.SURVIVALTIME) 
+        else eventPlayer.player_word,
         updateEveryFrame(eventPlayer.getEyePosition() + vect(0, 1.25, 0)), 
         2, 
         Clip.NONE, 
@@ -133,7 +137,10 @@ rule "猜词地图文本显示猜测词语":
         2, 
         Clip.NONE, 
         WorldTextReeval.VISIBILITY_POSITION_STRING_AND_COLOR,
-        Color.YELLOW if current_selection_index == 0 else Color.WHITE)
+        Color.YELLOW if current_selection_index == 0 and guess_word_result == GuessResult.NONE else 
+        Color.GREEN if correct_word_index == 0 and guess_word_result != GuessResult.NONE else 
+        Color.RED if current_selection_index == 0 and guess_word_result == GuessResult.FAILURE else
+        Color.WHITE)
     
     createInWorldText(
         getAllPlayers() if guessing_active == true and guessing_part == GuessingPart.GUESSING else null, 
@@ -142,7 +149,10 @@ rule "猜词地图文本显示猜测词语":
         2, 
         Clip.NONE, 
         WorldTextReeval.VISIBILITY_POSITION_STRING_AND_COLOR,
-        Color.YELLOW if current_selection_index == 1 else Color.WHITE)
+        Color.YELLOW if current_selection_index == 1 and guess_word_result == GuessResult.NONE else 
+        Color.GREEN if correct_word_index == 1 and guess_word_result != GuessResult.NONE else 
+        Color.RED if current_selection_index == 1 and guess_word_result == GuessResult.FAILURE else
+        Color.WHITE)
 
     createInWorldText(
         getAllPlayers() if guessing_active == true and guessing_part == GuessingPart.GUESSING else null, 
@@ -151,7 +161,10 @@ rule "猜词地图文本显示猜测词语":
         2, 
         Clip.NONE, 
         WorldTextReeval.VISIBILITY_POSITION_STRING_AND_COLOR,
-        Color.YELLOW if current_selection_index == 2 else Color.WHITE)
+        Color.YELLOW if current_selection_index == 2 and guess_word_result == GuessResult.NONE else 
+        Color.GREEN if correct_word_index == 2 and guess_word_result != GuessResult.NONE else 
+        Color.RED if current_selection_index == 2 and guess_word_result == GuessResult.FAILURE else
+        Color.WHITE)
 
     createInWorldText(
         getAllPlayers() if guessing_active == true and guessing_part == GuessingPart.GUESSING else null, 
@@ -160,7 +173,10 @@ rule "猜词地图文本显示猜测词语":
         2, 
         Clip.NONE, 
         WorldTextReeval.VISIBILITY_POSITION_STRING_AND_COLOR,
-        Color.YELLOW if current_selection_index == 3 else Color.WHITE)
+        Color.YELLOW if current_selection_index == 3 and guess_word_result == GuessResult.NONE else 
+        Color.GREEN if correct_word_index == 3 and guess_word_result != GuessResult.NONE else 
+        Color.RED if current_selection_index == 3 and guess_word_result == GuessResult.FAILURE else
+        Color.WHITE)
 
     createInWorldText(
         getAllPlayers() if guessing_active == true and guessing_part == GuessingPart.GUESSING else null, 
@@ -169,7 +185,10 @@ rule "猜词地图文本显示猜测词语":
         2, 
         Clip.NONE, 
         WorldTextReeval.VISIBILITY_POSITION_STRING_AND_COLOR,
-        Color.YELLOW if current_selection_index == 4 else Color.WHITE)
+        Color.YELLOW if current_selection_index == 4 and guess_word_result == GuessResult.NONE else 
+        Color.GREEN if correct_word_index == 4 and guess_word_result != GuessResult.NONE else 
+        Color.RED if current_selection_index == 4 and guess_word_result == GuessResult.FAILURE else
+        Color.WHITE)
 
     createInWorldText(
         getAllPlayers() if guessing_active == true and guessing_part == GuessingPart.GUESSING else null, 
@@ -178,4 +197,7 @@ rule "猜词地图文本显示猜测词语":
         2, 
         Clip.NONE, 
         WorldTextReeval.VISIBILITY_POSITION_STRING_AND_COLOR,
-        Color.YELLOW if current_selection_index == 5 else Color.WHITE)
+        Color.YELLOW if current_selection_index == 5 and guess_word_result == GuessResult.NONE else 
+        Color.GREEN if correct_word_index == 5 and guess_word_result != GuessResult.NONE else 
+        Color.RED if current_selection_index == 5 and guess_word_result == GuessResult.FAILURE else
+        Color.WHITE)

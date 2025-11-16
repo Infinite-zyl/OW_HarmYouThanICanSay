@@ -3,9 +3,9 @@
 rule "完成条件初始化":
     @Condition isGameInProgress()
     
-    disableInspector()
+    # disableInspector()
     disableScoring()
-    disableGamemodeCompletion()
+    # disableGamemodeCompletion()
     pauseMatchTime()
     
 rule "集结时间初始化":
