@@ -7,6 +7,7 @@ rule "完成条件初始化":
     disableScoring()
     # disableGamemodeCompletion()
     pauseMatchTime()
+    setMatchTime(600)
     
 rule "集结时间初始化":
     @Condition isAssemblingHeroes() == true
@@ -23,7 +24,7 @@ rule "玩家变量初始化":
     @Event eachPlayer
     @Condition isGameInProgress()
     
-    eventPlayer.disableGamemodeHud()
+    
     
     eventPlayer.setScore(10) # 玩家分数初始化为10
     eventPlayer.player_dealt_damage_flag = false # 玩家是否造成伤害标记初始化为假

@@ -431,8 +431,8 @@ rule "存活100秒":
     @Event eachPlayer
     @Condition guessing_active == false
     @Condition eventPlayer.player_word == "存活{}秒".format(WordNumber.SURVIVALTIME)
+    @Condition eventPlayer.survival_timer == WordNumber.SURVIVALTIME
 
-    eventPlayer.conditionJudgment(WordNumber.SURVIVALTIME)
     illegal_kill()
 
 # 观察/互动类

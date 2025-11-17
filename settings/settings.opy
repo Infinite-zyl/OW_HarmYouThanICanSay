@@ -1,11 +1,14 @@
 settings {
     "main": {
         "description": "代码：02531\n规则同桌游：害你在心口难开\n创意&词条借鉴：傲娇青冥君#5952\n二次开发：来一瓶可乐#51797\n源码参见：https://github.com/Infinite-zyl/OW_HarmYouThanICanSay",
-        "modeName": "不要做挑战 v1.0.1"
+        "modeName": "不要做挑战 v1.0.2"
     },
     "lobby": {
         "mapRotation": "afterGame",
+        "enableMatchVoiceChat": true,
+        "spectatorSlots": 12,
         "returnToLobby": "afterGame",
+        "allowPlayersInQueue": true,
         "useExperimentalUpdate": true
     },
     "gamemodes": {
@@ -41,4 +44,3 @@ settings {
         }
     }
 }
-

@@ -52,6 +52,7 @@ rule "设置猜词环节玩家状态":
     
     eventPlayer.setMoveSpeed(0)
     eventPlayer.setStatusEffect(null, Status.INVINCIBLE, 9999)
+    eventPlayer.disableGamemodeHud()
     eventPlayer.disableHeroHud()
     eventPlayer.startCamera(
         eventPlayer.getEyePosition() + updateEveryFrame(eventPlayer.getFacingDirection()) * 0.5, 
@@ -67,6 +68,7 @@ rule "退出猜词环节恢复玩家状态":
     @Condition isGameInProgress() == true
     
     eventPlayer.setMoveSpeed(100)
+    eventPlayer.enableGamemodeHud()
     eventPlayer.clearStatusEffect(Status.INVINCIBLE)
     eventPlayer.stopCamera()
     eventPlayer.enableHeroHud()
@@ -203,10 +205,10 @@ rule "时间耗尽结束猜词环节":
 rule "猜词玩家离开比赛":
     @Event playerLeft
     @Condition guessing_active == true
-    
-    wait(0.25) # 防止与跳过提问环节规则冲突
-    guessing_active = false
-    guessing_part = GuessingPart.NONE
-    current_guesser = ""
-    wait(1)
-    bigMessage(getAllPlayers(), "猜词玩家离开了比赛，无事发生")
+
+    if entityExists(current_guesser) != true:
+        guessing_active = false
+        guessing_part = GuessingPart.NONE
+        current_guesser = ""
+        wait(1)
+        bigMessage(getAllPlayers(), "猜词玩家离开了比赛，无事发生")

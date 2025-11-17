@@ -49,8 +49,13 @@ rule "按下互动绑定":
     # 把自己加入新目标的绑定列表
     eventPlayer.bind_new_target.bound_players.append(eventPlayer)
 
+rule "绑定提示":
+    @Event eachPlayer
+    @Condition guessing_active == false
+    @Condition len(eventPlayer.bound_players) > 0 
+
     # 小字体提示被绑定人数
-    smallMessage(eventPlayer.bind_new_target, "你已被【 {} 】人绑定".format(len(eventPlayer.bind_new_target.bound_players)))
+    smallMessage(eventPlayer, "你已被【 {} 】人绑定".format(len(eventPlayer.bound_players)))
 
 rule "小字体提示先绑定再互动":
     @Event eachPlayer
@@ -90,9 +95,9 @@ rule "存活计时器":
 rule "存活积分":
     @Event eachPlayer
     @Condition isGameInProgress() == true
-    @Condition eventPlayer.survival_timer >= 60
+    @Condition eventPlayer.survival_timer != 0
+    @Condition eventPlayer.survival_timer % 60 == 0
     
-    eventPlayer.survival_timer = 0
     eventPlayer.addToScore(1)
     smallMessage(eventPlayer, "存活一分钟，获得积分【 {} 】".format(PointsEnum.SURVIVAL_POINT))
 

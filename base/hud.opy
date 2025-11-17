@@ -8,7 +8,7 @@ rule "玩家头顶词条HUD显示":
     # 给非绑定玩家显示普通词条
     createInWorldText(
         getAllPlayers().exclude(eventPlayer).exclude(eventPlayer.bound_players) if guessing_active == false and eventPlayer.hasSpawned() == true else null, 
-        "存活{}秒".format(WordNumber.SURVIVALTIME - eventPlayer.cJ_i - 1) 
+        "存活{}秒".format(WordNumber.SURVIVALTIME - eventPlayer.survival_timer) 
         if eventPlayer.player_word == "存活{}秒".format(WordNumber.SURVIVALTIME) 
         else eventPlayer.player_word, 
         updateEveryFrame(eventPlayer.getEyePosition() + vect(0, 1.25, 0)), 
@@ -19,7 +19,7 @@ rule "玩家头顶词条HUD显示":
     # 给绑定玩家显示黄色词条
     createInWorldText(
         eventPlayer.bound_players if guessing_active == false and eventPlayer.hasSpawned() == true else null, 
-        "存活{}秒".format(WordNumber.SURVIVALTIME - eventPlayer.cJ_i - 1) 
+        "存活{}秒".format(WordNumber.SURVIVALTIME - eventPlayer.survival_timer) 
         if eventPlayer.player_word == "存活{}秒".format(WordNumber.SURVIVALTIME) 
         else eventPlayer.player_word,
         updateEveryFrame(eventPlayer.getEyePosition() + vect(0, 1.25, 0)), 
@@ -38,7 +38,7 @@ rule "给准备绑定目标显示绑定提示":
         eventPlayer.getRealPlayerClosestToReticle(Team.ALL) != null and
         eventPlayer.getRealPlayerClosestToReticle(Team.ALL) != eventPlayer.bind_target and 
         isInLoS(eventPlayer, eventPlayer.getRealPlayerClosestToReticle(Team.ALL)) else null, 
-        "按下【{0}】绑定".format(inputBindingString(Button.INTERACT)), 
+        "按下【 {} 】绑定".format(inputBindingString(Button.INTERACT)), 
         updateEveryFrame(eventPlayer.getRealPlayerClosestToReticle(Team.ALL).getEyePosition() + vect(0, 2.25, 0)), 
         1.5, 
         Clip.SURFACES, 
@@ -60,6 +60,7 @@ rule "切换英雄HUD":
 rule "当前积分显示HUD":
     @Event eachPlayer
     @Condition isGameInProgress()
+    @Disabled
 
     hudHeader(
         eventPlayer, 
@@ -74,38 +75,44 @@ rule "换词条倒计时HUD":
 
     hudHeader(
         eventPlayer if guessing_active == false else null, 
-        "更换目标词条 : {}".format(eventPlayer.change_word_timer) if eventPlayer.change_word_timer > 0 else "按下【 {0} 】更换目标词条".format(inputBindingString(Button.MELEE)), 
+        "更换目标词条 : {}".format(eventPlayer.change_word_timer) if eventPlayer.change_word_timer > 0 else 
+        "按下【 {} 】更换目标词条".format(inputBindingString(Button.MELEE)), 
         HudPosition.LEFT, 
-        0, 
+        -1, 
         Color.WHITE if eventPlayer.change_word_timer > 0 else Color.GREEN, 
-        HudReeval.VISIBILITY_STRING_AND_COLOR)
-
-    hudHeader(
-        eventPlayer if eventPlayer != current_guesser and guessing_active == true else null, 
-        "【{}】的词条: \n【{}】".format(current_guesser, current_guesser.player_word), 
-        HudPosition.LEFT, 
-        0, 
-        Color.RED, 
         HudReeval.VISIBILITY_STRING_AND_COLOR)
 
 rule "猜词倒计时HUD":
     @Event eachPlayer
     @Condition isGameInProgress()
 
-    hudHeader(eventPlayer, 
-    "猜词 : {0}".format(eventPlayer.guess_word_timer) if eventPlayer.guess_word_timer > 0 and guessing_part == GuessingPart.NONE else 
-    "提 问 环 节" if guessing_part == GuessingPart.QA else
-    "下 注 环 节" if guessing_part == GuessingPart.BETTING else
-    "猜 词 环 节" if guessing_part == GuessingPart.GUESSING else
-    "发送集合开始猜词", 
-    HudPosition.TOP, 
-    0, 
-    Color.WHITE if eventPlayer.guess_word_timer > 0 and guessing_part == GuessingPart.NONE else 
-    Color.SKY_BLUE if guessing_part != GuessingPart.NONE else
-    Color.GREEN, 
-    HudReeval.VISIBILITY_STRING_AND_COLOR)
+    hudHeader(
+        eventPlayer if guessing_active == false else null,
+        "猜词 : {}".format(eventPlayer.guess_word_timer) if eventPlayer.guess_word_timer > 0 and guessing_active == false else 
+        "发送集合开始猜词" if eventPlayer.guess_word_timer == 0 and guessing_active == false else
+        null, 
+        HudPosition.LEFT, 
+        0, 
+        Color.WHITE if eventPlayer.guess_word_timer > 0 and guessing_part == GuessingPart.NONE else 
+        Color.GREEN, 
+        HudReeval.VISIBILITY_STRING_AND_COLOR)
 
-rule "猜词环节进度条HUD":
+rule "顶部提示提示":
+    @Event eachPlayer
+    @Condition isGameInProgress()
+
+    hudHeader(
+        eventPlayer if guessing_active == true else null, 
+        "提 问 环 节" if guessing_part == GuessingPart.QA else
+        "下 注 环 节" if guessing_part == GuessingPart.BETTING else
+        "猜 词 环 节" if guessing_part == GuessingPart.GUESSING else
+        null, 
+        HudPosition.TOP, 
+        -1, 
+        Color.SKY_BLUE, 
+        HudReeval.VISIBILITY_STRING_AND_COLOR)
+
+rule "猜词环节HUD":
     @Event eachPlayer
     @Condition isGameInProgress()
 
@@ -120,11 +127,19 @@ rule "猜词环节进度条HUD":
         "等待玩家选择，剩余时间 : {}".format(guess_timmer) if guessing_part == GuessingPart.GUESSING and eventPlayer != current_guesser else
         "剩余时间 : {}".format(guess_timmer), 
         HudPosition.TOP, 
-        1, 
+        0, 
         Color.GREEN if guess_timmer / part_time > 0.5 else
         Color.YELLOW if guess_timmer / part_time > 0.2 else
         Color.RED, 
         Color.YELLOW)
+
+    hudHeader(
+        eventPlayer if eventPlayer != current_guesser and guessing_active == true else null, 
+        "【{}】的词条: \n【{}】".format(current_guesser, current_guesser.player_word), 
+        HudPosition.LEFT, 
+        0, 
+        Color.LIGHT_RED, 
+        HudReeval.VISIBILITY_STRING_AND_COLOR)
 
 
 rule "猜词地图文本显示猜测词语":
