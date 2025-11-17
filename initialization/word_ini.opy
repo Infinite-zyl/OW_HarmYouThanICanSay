@@ -46,6 +46,7 @@ rule "初始化词库":
         "累计造成{}点伤害".format(WordNumber.ALLDAMAGE),
         "造成击杀",
         "{}秒内不造成伤害".format(WordNumber.DONTHURT),
+        "{}秒内不使用技能".format(WordNumber.NOSKILLS),
     ]
 
     # 移动/位置类
@@ -68,10 +69,20 @@ rule "初始化词库":
     # 观察/互动类
     words_interaction = [
         "凝视敌人超过{}秒".format(WordNumber.STAREENEMY),
-        "头像框火力全开"
+        "头像框火力全开",
+        "受伤超过{}秒不还手".format(WordNumber.FIGHTBACK)
     ]
 
-    all_words = words_action.concat(words_attack).concat(words_movement).concat(words_survival).concat(words_interaction)
+    # 状态类
+    word_status = [
+        "被入侵",
+        "燃烧",
+        "击倒",
+        "沉睡",
+        "击晕"
+    ]
+
+    all_words = words_action.concat(words_attack).concat(words_movement).concat(words_survival).concat(words_interaction).concat(word_status)
 
 
 rule "初始化玩家词条":

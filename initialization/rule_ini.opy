@@ -24,10 +24,9 @@ rule "玩家变量初始化":
     @Event eachPlayer
     @Condition isGameInProgress()
     
-    
-    
     eventPlayer.setScore(10) # 玩家分数初始化为10
     eventPlayer.player_dealt_damage_flag = false # 玩家是否造成伤害标记初始化为假
+    eventPlayer.player_injured_flag = false # 玩家受到伤害标记初始化为假
     eventPlayer.damage_amount = 0 # 玩家造成的伤害量初始化为0
 
     eventPlayer.bind_new_target = "" # 新绑定目标名称初始化为空字符串

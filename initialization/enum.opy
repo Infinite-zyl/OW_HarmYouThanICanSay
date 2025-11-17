@@ -11,7 +11,7 @@ enum PointsEnum:
 
 enum WordNumber:
     KEEPMOVINGFORWARD = 5 # 按住前进键持续5秒
-    ENEMYDISTANCEOUT = 25 # 攻击距离自身25m以外的敌人
+    ENEMYDISTANCEOUT = 15 # 攻击距离自身15m以外的敌人
     ENEMYDISTANCEIN = 3 # 攻击距离自身3m以内的敌人
     ONETIMEDAMAGE = 100 # 造成一次大于100点的伤害
     ALLDAMAGE = 500 # 累计造成500点伤害
@@ -22,6 +22,8 @@ enum WordNumber:
     GROUNDDISTANCE = 6 # 距离地面6m以上
     SURVIVALTIME = 100 # 存活100秒
     STAREENEMY = 5 # 凝视敌人超过5秒
+    FIGHTBACK = 5 # 受伤超过5秒不还手
+    NOSKILLS = 10 # 10秒内不使用技能
 
 enum GuessingPart:
     NONE = 0 # 非猜词阶段

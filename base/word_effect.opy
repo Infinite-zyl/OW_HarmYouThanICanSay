@@ -154,7 +154,7 @@ rule "用光弹匣":
     illegal_kill()
 
 # 攻击类
-rule "攻击距离自身25m以外的敌人":
+rule "攻击距离自身15m以外的敌人":
     @Event playerDealtDamage
     @Condition guessing_active == false
     @Condition eventPlayer.player_word == "攻击距离自身{}m以外的敌人".format(WordNumber.ENEMYDISTANCEOUT)
@@ -358,6 +358,17 @@ rule "30秒内不造成伤害：恢复计时":
     wait(0.25)
     eventPlayer.player_dealt_damage_flag = false
 
+rule "10秒内不使用技能":
+    @Event eachPlayer
+    @Condition guessing_active == false
+    @Condition eventPlayer.player_word == "{}秒内不使用技能".format(WordNumber.NOSKILLS)
+    @Condition (eventPlayer.isHoldingButton(Button.ABILITY_1) or 
+    eventPlayer.isHoldingButton(Button.ABILITY_2) or 
+    eventPlayer.isHoldingButton(Button.ULTIMATE)) != true
+
+    eventPlayer.conditionJudgment(WordNumber.NOSKILLS, 0.1)
+    illegal_kill()
+
 # 移动/位置类
 rule "持续移动10秒钟":
     @Event eachPlayer
@@ -451,5 +462,71 @@ rule "头像框火力全开":
     @Condition guessing_active == false
     @Condition eventPlayer.player_word == "头像框火力全开"
     @Condition eventPlayer.isOnFire() == true
+    
+    illegal_kill()
+
+rule "受伤超过5秒不还手 : 初始化阶段":
+    @Event playerTookDamage
+    @Condition guessing_active == false
+    @Condition eventPlayer.player_injured_flag == false
+    @Condition eventPlayer.player_word == "受伤超过{}秒不还手".format(WordNumber.FIGHTBACK)
+
+    eventPlayer.player_injured_flag = true
+
+rule "受伤超过5秒不还手":
+    @Event eachPlayer
+    @Condition guessing_active == false
+    @Condition eventPlayer.player_injured_flag == true
+    @Condition eventPlayer.player_word == "受伤超过{}秒不还手".format(WordNumber.FIGHTBACK)
+
+    eventPlayer.conditionJudgment(WordNumber.FIGHTBACK)
+    illegal_kill()
+    eventPlayer.player_injured_flag = false
+
+rule "受伤超过5秒不还手":
+    @Event playerDealtDamage
+    @Condition guessing_active == false
+    @Condition eventPlayer.player_word == "受伤超过{}秒不还手".format(WordNumber.FIGHTBACK)
+    
+    eventPlayer.player_injured_flag = false
+
+# 状态类
+rule "被入侵":
+    @Event eachPlayer
+    @Condition guessing_active == false
+    @Condition eventPlayer.hasStatus(Status.HACKED) == true
+    @Condition eventPlayer.player_word == "被入侵"
+    
+    illegal_kill()
+
+rule "燃烧":
+    @Event eachPlayer
+    @Condition guessing_active == false
+    @Condition eventPlayer.hasStatus(Status.BURNING) == true
+    @Condition eventPlayer.player_word == "燃烧"
+    
+    illegal_kill()
+
+rule "击倒":
+    @Event eachPlayer
+    @Condition guessing_active == false
+    @Condition eventPlayer.hasStatus(Status.KNOCKED_DOWN) == true
+    @Condition eventPlayer.player_word == "击倒"
+    
+    illegal_kill()
+
+rule "沉睡":
+    @Event eachPlayer
+    @Condition guessing_active == false
+    @Condition eventPlayer.hasStatus(Status.ASLEEP) == true
+    @Condition eventPlayer.player_word == "沉睡"
+    
+    illegal_kill()
+
+rule "击晕":
+    @Event eachPlayer
+    @Condition guessing_active == false
+    @Condition eventPlayer.hasStatus(Status.STUNNED) == true
+    @Condition eventPlayer.player_word == "击晕"
     
     illegal_kill()

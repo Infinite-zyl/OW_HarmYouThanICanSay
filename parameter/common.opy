@@ -7,6 +7,7 @@ globalvar words_attack # 攻击类词库
 globalvar words_movement # 移动/位置类词库
 globalvar words_survival # 生存类词库
 globalvar words_interaction # 互动类词库
+globalvar word_status # 状态类词库
 globalvar all_words # 词库总集合
 globalvar change_word_cd # 词条更换cd
 globalvar guess_word_cd # 猜词时间cd
@@ -42,6 +43,7 @@ playervar cJ_i # 条件判断索引
 playervar player_last_word # 玩家上一个词条
 playervar player_word # 当前玩家词条
 playervar player_dealt_damage_flag # 玩家是否造成伤害标记
+playervar player_injured_flag # 玩家受到伤害标记
 playervar damage_amount # 玩家造成的伤害量
 
 playervar bind_new_target # 新绑定目标名称
