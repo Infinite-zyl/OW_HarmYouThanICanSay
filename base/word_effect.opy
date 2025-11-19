@@ -530,3 +530,39 @@ rule "被击晕":
     @Condition eventPlayer.player_word == "被击晕"
     
     illegal_kill()
+
+rule "生命值少于100":
+    @Event playerTookDamage
+    @Condition guessing_active == false
+    @Condition eventPlayer.player_word == "生命值少于100"
+
+    if eventPlayer.getHealth() < 200:
+        illegal_kill()
+
+# 角色类
+rule "使用重装英雄":
+    @Event eachPlayer
+    @Condition guessing_active == false
+    @Condition eventPlayer.player_word == "使用重装英雄"
+
+    wait(1)
+    if eventPlayer.getHero() in getTankHeroes() == true:
+        illegal_kill()
+
+rule "使用辅助英雄":
+    @Event eachPlayer
+    @Condition guessing_active == false
+    @Condition eventPlayer.player_word == "使用辅助英雄"
+
+    wait(1)
+    if eventPlayer.getHero() in getSupportHeroes() == true:
+        illegal_kill()
+
+rule "使用输出英雄":
+    @Event eachPlayer
+    @Condition guessing_active == false
+    @Condition eventPlayer.player_word == "使用输出英雄"
+
+    wait(1)
+    if eventPlayer.getHero() in getDamageHeroes() == true:
+        illegal_kill()

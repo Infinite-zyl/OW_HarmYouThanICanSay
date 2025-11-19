@@ -8,6 +8,7 @@ globalvar words_movement # 移动/位置类词库
 globalvar words_survival # 生存类词库
 globalvar words_interaction # 互动类词库
 globalvar words_status # 状态类词库
+globalvar words_character # 角色类词库
 globalvar all_words # 词库总集合
 globalvar change_word_cd # 词条更换cd
 globalvar guess_word_cd # 猜词时间cd

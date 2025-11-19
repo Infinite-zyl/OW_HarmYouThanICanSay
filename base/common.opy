@@ -49,14 +49,6 @@ rule "按下互动绑定":
     # 把自己加入新目标的绑定列表
     eventPlayer.bind_new_target.bound_players.append(eventPlayer)
 
-rule "绑定提示":
-    @Event eachPlayer
-    @Condition guessing_active == false
-    @Condition len(eventPlayer.bound_players) > 0 
-
-    # 小字体提示被绑定人数
-    smallMessage(eventPlayer, "你已被【 {} 】人绑定".format(len(eventPlayer.bound_players)))
-
 rule "小字体提示先绑定再互动":
     @Event eachPlayer
     @Condition guessing_active == false

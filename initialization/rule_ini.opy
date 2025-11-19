@@ -3,7 +3,7 @@
 rule "完成条件初始化":
     @Condition isGameInProgress()
     
-    # disableInspector()
+    disableInspector()
     disableScoring()
     # disableGamemodeCompletion()
     pauseMatchTime()

@@ -79,10 +79,18 @@ rule "初始化词库":
         "燃烧",
         "被击倒",
         "被沉睡",
-        "被击晕"
+        "被击晕",
+        "生命值少于100"
     ]
 
-    all_words = words_action.concat(words_attack).concat(words_movement).concat(words_survival).concat(words_interaction).concat(words_status)
+    # 角色类
+    words_character = [
+        "使用重装英雄",
+        "使用辅助英雄",
+        "使用输出英雄"
+    ]
+
+    all_words = words_action.concat(words_attack).concat(words_movement).concat(words_survival).concat(words_interaction).concat(words_status).concat(words_character)
 
 
 rule "初始化玩家词条":
