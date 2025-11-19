@@ -70,17 +70,18 @@ rule "初始化词库":
     words_interaction = [
         "凝视敌人超过{}秒".format(WordNumber.STAREENEMY),
         "头像框火力全开",
-        "受伤超过{}秒不还手".format(WordNumber.FIGHTBACK)
+        "受伤超过{}秒不还手".format(WordNumber.FIGHTBACK),
+        "周围有3名以上的敌人"
     ]
 
     # 状态类
     words_status = [
         "被入侵",
-        "燃烧",
+        "被点燃",
         "被击倒",
         "被沉睡",
         "被击晕",
-        "生命值少于100"
+        "生命值少于200"
     ]
 
     # 角色类

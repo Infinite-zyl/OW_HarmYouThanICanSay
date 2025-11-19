@@ -150,7 +150,7 @@ rule "侧面教程提示":
         eventPlayer if eventPlayer.tutorial_flag == true else null, 
         "
   【诱使对方违规得分，比单纯击杀更重要】
-  代码: 02531  版本: v1.1.2  QQ群:1032545322
+  代码: 02531  版本:v1.1.3  QQ群:1032545322
 ————————基础玩法————————
 
 · 每人头上有禁止动作词条，违规即死亡扣分
@@ -204,6 +204,15 @@ rule "猜词环节HUD":
 
 rule "猜词地图文本显示猜测词语":
     @Condition isGameInProgress()
+
+    createInWorldText(
+        getAllPlayers() if guessing_active == true and guessing_part == GuessingPart.QA else null, 
+        "可在公屏提问，【空格】跳过此环节", 
+        guess_word_plane_center, 
+        4, 
+        Clip.NONE, 
+        WorldTextReeval.VISIBILITY_POSITION_STRING_AND_COLOR,
+        Color.RED)
     
     createInWorldText(
         getAllPlayers() if guessing_active == true and guessing_part == GuessingPart.GUESSING else null, 

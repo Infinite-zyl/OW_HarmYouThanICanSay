@@ -24,7 +24,7 @@ def illegal_kill():
     wait(1)
     eventPlayer.bind_kill = false
     # 大字体显示上一个词条  
-    bigMessage(eventPlayer, "禁止动作 ：{0}".format(eventPlayer.player_last_word))    
+    bigMessage(eventPlayer, "禁止词条 ：{0}".format(eventPlayer.player_last_word))    
     
 
 macro Player.conditionJudgment(time = 3, step_length = 1):
@@ -490,6 +490,14 @@ rule "受伤超过5秒不还手":
     
     eventPlayer.player_injured_flag = false
 
+rule "周围有3名以上的敌人":
+    @Event eachPlayer
+    @Condition guessing_active == false
+    @Condition eventPlayer.player_word == "周围有3名以上的敌人"
+    @Condition len([player for player in getAllPlayers() if distance(eventPlayer.getPosition(), player.getPosition()) <= 2]) >= 3
+
+    illegal_kill()
+
 # 状态类
 rule "被入侵":
     @Event eachPlayer
@@ -499,11 +507,11 @@ rule "被入侵":
     
     illegal_kill()
 
-rule "燃烧":
+rule "被点燃":
     @Event eachPlayer
     @Condition guessing_active == false
     @Condition eventPlayer.hasStatus(Status.BURNING) == true
-    @Condition eventPlayer.player_word == "燃烧"
+    @Condition eventPlayer.player_word == "被点燃"
     
     illegal_kill()
 
@@ -531,10 +539,10 @@ rule "被击晕":
     
     illegal_kill()
 
-rule "生命值少于100":
+rule "生命值少于200":
     @Event playerTookDamage
     @Condition guessing_active == false
-    @Condition eventPlayer.player_word == "生命值少于100"
+    @Condition eventPlayer.player_word == "生命值少于200"
 
     if eventPlayer.getHealth() < 200:
         illegal_kill()
