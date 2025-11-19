@@ -7,7 +7,7 @@ globalvar words_attack # 攻击类词库
 globalvar words_movement # 移动/位置类词库
 globalvar words_survival # 生存类词库
 globalvar words_interaction # 互动类词库
-globalvar word_status # 状态类词库
+globalvar words_status # 状态类词库
 globalvar all_words # 词库总集合
 globalvar change_word_cd # 词条更换cd
 globalvar guess_word_cd # 猜词时间cd
@@ -54,5 +54,7 @@ playervar bound_players # 与之绑定的玩家列表
 playervar survival_timer # 存活计时器
 playervar change_word_timer # 词条更换计时器
 playervar guess_word_timer # 猜词计时器
+
+playervar tutorial_flag # 教程开关
 
 playervar testTarget # 测试用例目标玩家

@@ -507,26 +507,26 @@ rule "燃烧":
     
     illegal_kill()
 
-rule "击倒":
+rule "被击倒":
     @Event eachPlayer
     @Condition guessing_active == false
     @Condition eventPlayer.hasStatus(Status.KNOCKED_DOWN) == true
-    @Condition eventPlayer.player_word == "击倒"
+    @Condition eventPlayer.player_word == "被击倒"
     
     illegal_kill()
 
-rule "沉睡":
+rule "被沉睡":
     @Event eachPlayer
     @Condition guessing_active == false
     @Condition eventPlayer.hasStatus(Status.ASLEEP) == true
-    @Condition eventPlayer.player_word == "沉睡"
+    @Condition eventPlayer.player_word == "被沉睡"
     
     illegal_kill()
 
-rule "击晕":
+rule "被击晕":
     @Event eachPlayer
     @Condition guessing_active == false
     @Condition eventPlayer.hasStatus(Status.STUNNED) == true
-    @Condition eventPlayer.player_word == "击晕"
+    @Condition eventPlayer.player_word == "被击晕"
     
     illegal_kill()

@@ -57,6 +57,18 @@ rule "切换英雄HUD":
         1, Color.WHITE, 
         HudReeval.VISIBILITY_AND_STRING)
 
+rule "切换英雄HUD":
+    @Event eachPlayer
+    @Condition isGameInProgress()
+    @Disabled
+
+    hudHeader(
+        eventPlayer if guessing_active == false else null, 
+        "QQ群：1032545322", 
+        HudPosition.RIGHT, 
+        0, Color.WHITE, 
+        HudReeval.VISIBILITY_AND_STRING)
+
 rule "当前积分显示HUD":
     @Event eachPlayer
     @Condition isGameInProgress()
@@ -75,11 +87,11 @@ rule "换词条倒计时HUD":
 
     hudHeader(
         eventPlayer if guessing_active == false else null, 
-        "更换目标词条 : {}".format(eventPlayer.change_word_timer) if eventPlayer.change_word_timer > 0 else 
+        "更换别人词条 : {}".format(eventPlayer.change_word_timer) if eventPlayer.change_word_timer > 0 else 
         "按下【 {} 】更换目标词条".format(inputBindingString(Button.MELEE)), 
-        HudPosition.LEFT, 
+        HudPosition.RIGHT, 
         -1, 
-        Color.WHITE if eventPlayer.change_word_timer > 0 else Color.GREEN, 
+        Color.WHITE if eventPlayer.change_word_timer > 0 else Color.LIME_GREEN, 
         HudReeval.VISIBILITY_STRING_AND_COLOR)
 
 rule "猜词倒计时HUD":
@@ -88,13 +100,13 @@ rule "猜词倒计时HUD":
 
     hudHeader(
         eventPlayer if guessing_active == false else null,
-        "猜词 : {}".format(eventPlayer.guess_word_timer) if eventPlayer.guess_word_timer > 0 and guessing_active == false else 
-        "发送集合开始猜词" if eventPlayer.guess_word_timer == 0 and guessing_active == false else
+        "猜自己的词条 : {}".format(eventPlayer.guess_word_timer) if eventPlayer.guess_word_timer > 0 and guessing_active == false else 
+        "发送【 集合 】进入猜词环节" if eventPlayer.guess_word_timer == 0 and guessing_active == false else
         null, 
-        HudPosition.LEFT, 
+        HudPosition.RIGHT, 
         0, 
         Color.WHITE if eventPlayer.guess_word_timer > 0 and guessing_part == GuessingPart.NONE else 
-        Color.GREEN, 
+        Color.LIME_GREEN, 
         HudReeval.VISIBILITY_STRING_AND_COLOR)
 
 rule "顶部提示提示":
@@ -111,6 +123,54 @@ rule "顶部提示提示":
         -1, 
         Color.SKY_BLUE, 
         HudReeval.VISIBILITY_STRING_AND_COLOR)
+    
+    hudHeader(
+        eventPlayer if guessing_active == false else null, 
+        "被【 {} 】人绑定".format(len(eventPlayer.bound_players)), 
+        HudPosition.TOP, 
+        0, 
+        Color.LIME_GREEN if len(eventPlayer.bound_players) <= 1 else
+        Color.ORANGE if len(eventPlayer.bound_players) <= 3 else
+        Color.RED, 
+        HudReeval.VISIBILITY_STRING_AND_COLOR)
+
+rule "侧面教程提示":
+    @Event eachPlayer
+    @Condition isGameInProgress()
+
+    hudHeader(
+        eventPlayer, 
+        "按 住【 {} 】关 闭 教 程".format(inputBindingString(Button.ULTIMATE)) if eventPlayer.tutorial_flag == true else
+        "按 住【 {} 】查 看 教 程".format(inputBindingString(Button.ULTIMATE)), 
+        HudPosition.LEFT, 
+        1, 
+        Color.ORANGE, 
+        HudReeval.VISIBILITY_AND_STRING)
+    hudSubheader(
+        eventPlayer if eventPlayer.tutorial_flag == true else null, 
+        "
+  【诱使对方违规得分，比单纯击杀更重要】
+  代码: 02531  版本: v1.1.1  QQ群:1032545322
+————————基础玩法————————
+
+· 每人头上有禁止动作词条，违规即死亡扣分
+· 按【互动键】绑定目标，其违规死亡则得分
+· 冷却结束后可更换目标词条或进入猜词环节
+· 猜词可提两个问题，按【跳跃键】跳过提问
+· 长 按【换 弹】键 可 切 换 英 雄
+
+————————积分展示————————
+· 违规ㅤㅤㅤㅤ  ㅤㅤㅤㅤ  ㅤㅤㅤㅤ  ㅤㅤㅤ  - 2
+· 绑定玩家违规ㅤㅤㅤㅤ  ㅤㅤㅤㅤ  ㅤㅤㅤ  + 2
+· 一分钟未违规ㅤㅤㅤㅤ  ㅤㅤㅤㅤ  ㅤㅤㅤ  + 1
+· 猜词正确ㅤㅤㅤㅤ  ㅤㅤㅤㅤ  ㅤㅤ ㅤㅤㅤ  + 8
+· 猜词错误ㅤㅤㅤㅤ  ㅤㅤㅤㅤ  ㅤㅤ ㅤㅤㅤ  - 4
+————————————————————
+", 
+        HudPosition.LEFT, 
+        2, 
+        Color.WHITE, 
+        HudReeval.VISIBILITY_AND_STRING)
 
 rule "猜词环节HUD":
     @Event eachPlayer
@@ -128,7 +188,7 @@ rule "猜词环节HUD":
         "剩余时间 : {}".format(guess_timmer), 
         HudPosition.TOP, 
         0, 
-        Color.GREEN if guess_timmer / part_time > 0.5 else
+        Color.LIME_GREEN if guess_timmer / part_time > 0.5 else
         Color.YELLOW if guess_timmer / part_time > 0.2 else
         Color.RED, 
         Color.YELLOW)
@@ -216,3 +276,38 @@ rule "猜词地图文本显示猜测词语":
         Color.GREEN if correct_word_index == 5 and guess_word_result != GuessResult.NONE else 
         Color.RED if current_selection_index == 5 and guess_word_result == GuessResult.FAILURE else
         Color.WHITE)
+
+rule "二维码测试":
+    @Condition isGameInProgress()
+    @Disabled
+
+    createInWorldText(
+        getAllPlayers(), 
+        "███████            █        ███        ███████
+█                    █        █                ███    █                    █
+█    ███    █    █        █        █    █    █    ███    █
+█    ███    █        █        ████        █    ███    █
+█    ███    █        █        █    █            █    ███    █
+█                    █            ███    ███    █                    █
+███████    █    █    █    █    █    ███████
+                                █        █    █        █
+███    █████            █        ████            █
+            ██                █    ████            █                    █
+████        ██        █████    █    ███    ███
+    █                        ███    ██        ████            █
+                █    █    █    ██    █    ██    ██    █    ██
+    ██    ██        ████                █    █        █        █
+█        █        ██    ██        ██            ██        ███
+    ██    █            █        █    ██        █        █        █
+█                ██        █        █            ██████
+                                █    ████    ██            ██    ██
+███████    ██    ██████    █    ██    ██
+█                    █    █            ███    █            ██    ██
+█    ███    █    ████        █    ██████    ██
+█    ███    █                █            ███    ███
+█    ███    █    ███        █    █    █        █            █
+█                    █    █    ██            ███        █        █
+███████    ███    █            ████            ██",
+        guess_word_plane_center, 
+        2, 
+        Clip.NONE)

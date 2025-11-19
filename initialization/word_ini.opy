@@ -74,15 +74,15 @@ rule "初始化词库":
     ]
 
     # 状态类
-    word_status = [
+    words_status = [
         "被入侵",
         "燃烧",
-        "击倒",
-        "沉睡",
-        "击晕"
+        "被击倒",
+        "被沉睡",
+        "被击晕"
     ]
 
-    all_words = words_action.concat(words_attack).concat(words_movement).concat(words_survival).concat(words_interaction).concat(word_status)
+    all_words = words_action.concat(words_attack).concat(words_movement).concat(words_survival).concat(words_interaction).concat(words_status)
 
 
 rule "初始化玩家词条":

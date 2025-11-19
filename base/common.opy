@@ -19,10 +19,10 @@ rule "按住换弹键切换英雄":
     @Condition guessing_active == false
     @Condition eventPlayer.isHoldingButton(Button.RELOAD) == true
 
-    wait(1)
+    wait(0.5)
     if not ruleCondition:
         return
-    wait(1)
+    wait(0.5)
     if not ruleCondition:
         return
     eventPlayer.addToScore(PointsEnum.CHANGE_HERO)
@@ -128,3 +128,18 @@ rule "词条更换":
     smallMessage(eventPlayer.getRealPlayerClosestToReticle(Team.ALL), "小心！有人更换了你的词条！")
 
     eventPlayer.change_word_timer = change_word_cd # 重置词条更换计时器
+
+rule "开关教程":
+    @Event eachPlayer
+    @Condition eventPlayer.isHoldingButton(Button.ULTIMATE) == true
+
+    wait(0.5)
+    if not ruleCondition:
+        return
+    wait(0.5)
+    if not ruleCondition:
+        return
+    if eventPlayer.tutorial_flag == true:
+        eventPlayer.tutorial_flag = false
+    else:
+        eventPlayer.tutorial_flag = true

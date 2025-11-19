@@ -24,6 +24,8 @@ rule "玩家变量初始化":
     @Event eachPlayer
     @Condition isGameInProgress()
     
+    eventPlayer.tutorial_flag = true # 教程默认为开
+
     eventPlayer.setScore(10) # 玩家分数初始化为10
     eventPlayer.player_dealt_damage_flag = false # 玩家是否造成伤害标记初始化为假
     eventPlayer.player_injured_flag = false # 玩家受到伤害标记初始化为假
