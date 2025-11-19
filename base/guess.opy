@@ -5,7 +5,6 @@ rule "猜词功能计时器":
     @Condition guessing_active == false
     @Condition isGameInProgress() == true
     @Condition eventPlayer.hasSpawned() == true
-    @Condition eventPlayer.isAlive() == true
     @Condition eventPlayer.guess_word_timer > 0
     
     wait(1)

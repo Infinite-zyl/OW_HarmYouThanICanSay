@@ -191,7 +191,7 @@ rule "猜词环节HUD":
         Color.LIME_GREEN if guess_timmer / part_time > 0.5 else
         Color.YELLOW if guess_timmer / part_time > 0.2 else
         Color.RED, 
-        Color.YELLOW)
+        Color.ORANGE)
 
     hudHeader(
         eventPlayer if eventPlayer != current_guesser and guessing_active == true else null, 

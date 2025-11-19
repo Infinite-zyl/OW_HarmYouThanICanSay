@@ -97,7 +97,7 @@ rule "换词条计时器":
     @Event eachPlayer
     @Condition guessing_active == false
     @Condition isGameInProgress() == true
-    @Condition eventPlayer.isAlive() == true
+    @Condition eventPlayer.hasSpawned() == true
     @Condition eventPlayer.change_word_timer > 0
     
     wait(1)
@@ -109,7 +109,7 @@ rule "词条更换":
     @Event eachPlayer
     @Condition guessing_active == false
     @Condition isGameInProgress() == true
-    @Condition eventPlayer.isAlive() == true
+    @Condition eventPlayer.hasSpawned() == true
     @Condition eventPlayer.change_word_timer == 0 # 冷却结束
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
     @Condition eventPlayer.getRealPlayerClosestToReticle(Team.ALL) != null
