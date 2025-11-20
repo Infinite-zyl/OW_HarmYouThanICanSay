@@ -1,7 +1,7 @@
 settings {
     "main": {
-        "description": "代码：02531\n规则同桌游：害你在心口难开\n创意&词条借鉴：傲娇青冥君#5952\n二次开发：来一瓶可乐#51797\n源码参见：https://github.com/Infinite-zyl/OW_HarmYouThanICanSay",
-        "modeName": "不要做挑战(各自为战) v1.1.4"
+        "description": "团队死斗：2N28M 死斗：02531\n规则同桌游：害你在心口难开\n创意&词条借鉴：傲娇青冥君#5952\n二次开发：来一瓶可乐#51797\n源码参见：https://github.com/Infinite-zyl/OW_HarmYouThanICanSay",
+        "modeName": "不要做挑战(各自为战) v1.1.5"
     },
     "lobby": {
         "mapRotation": "afterGame",

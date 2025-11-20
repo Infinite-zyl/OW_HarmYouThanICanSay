@@ -45,42 +45,6 @@ rule "给准备绑定目标显示绑定提示":
         WorldTextReeval.VISIBILITY_POSITION_AND_STRING, 
         Color.YELLOW)
 
-rule "切换英雄HUD":
-    @Event eachPlayer
-    @Condition isGameInProgress()
-    @Disabled
-
-    hudHeader(
-        eventPlayer if guessing_active == false else null, 
-        "按住换弹键切换英雄", 
-        HudPosition.RIGHT, 
-        1, Color.WHITE, 
-        HudReeval.VISIBILITY_AND_STRING)
-
-rule "切换英雄HUD":
-    @Event eachPlayer
-    @Condition isGameInProgress()
-    @Disabled
-
-    hudHeader(
-        eventPlayer if guessing_active == false else null, 
-        "QQ群：1032545322", 
-        HudPosition.RIGHT, 
-        0, Color.WHITE, 
-        HudReeval.VISIBILITY_AND_STRING)
-
-rule "当前积分显示HUD":
-    @Event eachPlayer
-    @Condition isGameInProgress()
-    @Disabled
-
-    hudHeader(
-        eventPlayer, 
-        "当前积分 : {}".format(eventPlayer.getScore()), 
-        HudPosition.RIGHT, 0, 
-        Color.WHITE, 
-        HudReeval.VISIBILITY_AND_STRING)
-
 rule "换词条倒计时HUD":
     @Event eachPlayer
     @Condition isGameInProgress()
@@ -110,11 +74,10 @@ rule "猜词倒计时HUD":
         HudReeval.VISIBILITY_STRING_AND_COLOR)
 
 rule "顶部提示提示":
-    @Event eachPlayer
     @Condition isGameInProgress()
 
     hudHeader(
-        eventPlayer if guessing_active == true else null, 
+        getAllPlayers() if guessing_active == true else null, 
         "提 问 环 节" if guessing_part == GuessingPart.QA else
         "下 注 环 节" if guessing_part == GuessingPart.BETTING else
         "猜 词 环 节" if guessing_part == GuessingPart.GUESSING else
@@ -123,7 +86,11 @@ rule "顶部提示提示":
         -1, 
         Color.SKY_BLUE, 
         HudReeval.VISIBILITY_STRING_AND_COLOR)
-    
+
+rule "被绑定HUD提示":
+    @Event eachPlayer
+    @Condition isGameInProgress()
+
     hudHeader(
         eventPlayer if guessing_active == false else null, 
         "被【 {} 】人绑定".format(len(eventPlayer.bound_players)), 
@@ -150,7 +117,9 @@ rule "侧面教程提示":
         eventPlayer if eventPlayer.tutorial_flag == true else null, 
         "
   【诱使对方违规得分，比单纯击杀更重要】
-  代码: 02531  版本:v1.1.3  QQ群:1032545322
+  团队死斗：2N28M  
+  死斗代码：02531  版本：v1.1.5  
+  QQ群: 1032545322(你的建议是我更新的动力)
 ————————基础玩法————————
 
 · 每人头上有禁止动作词条，违规即死亡扣分
@@ -165,7 +134,9 @@ rule "侧面教程提示":
 · 一分钟未违规ㅤㅤㅤㅤ  ㅤㅤㅤㅤ  ㅤㅤㅤ  + 1
 · 猜词正确ㅤㅤㅤㅤ  ㅤㅤㅤㅤ  ㅤㅤ ㅤㅤㅤ  + 8
 · 猜词错误ㅤㅤㅤㅤ  ㅤㅤㅤㅤ  ㅤㅤ ㅤㅤㅤ  - 4
-————————————————————
+————————更新公告————————
+· 新增团队死斗模式，代码：2N28M
+· 修复部分玩家HUD不可见问题
 ", 
         HudPosition.LEFT, 
         2, 
@@ -193,8 +164,11 @@ rule "猜词环节HUD":
         Color.RED, 
         Color.ORANGE)
 
+rule "猜词人词条HUD提示":
+    @Condition isGameInProgress()
+
     hudHeader(
-        eventPlayer if eventPlayer != current_guesser and guessing_active == true else null, 
+        getAllPlayers().exclude(current_guesser) if guessing_active == true else null, 
         "【{}】的词条: \n【{}】".format(current_guesser, current_guesser.player_word), 
         HudPosition.LEFT, 
         0, 
@@ -285,38 +259,3 @@ rule "猜词地图文本显示猜测词语":
         Color.GREEN if correct_word_index == 5 and guess_word_result != GuessResult.NONE else 
         Color.RED if current_selection_index == 5 and guess_word_result == GuessResult.FAILURE else
         Color.WHITE)
-
-rule "二维码测试":
-    @Condition isGameInProgress()
-    @Disabled
-
-    createInWorldText(
-        getAllPlayers(), 
-        "███████            █        ███        ███████
-█                    █        █                ███    █                    █
-█    ███    █    █        █        █    █    █    ███    █
-█    ███    █        █        ████        █    ███    █
-█    ███    █        █        █    █            █    ███    █
-█                    █            ███    ███    █                    █
-███████    █    █    █    █    █    ███████
-                                █        █    █        █
-███    █████            █        ████            █
-            ██                █    ████            █                    █
-████        ██        █████    █    ███    ███
-    █                        ███    ██        ████            █
-                █    █    █    ██    █    ██    ██    █    ██
-    ██    ██        ████                █    █        █        █
-█        █        ██    ██        ██            ██        ███
-    ██    █            █        █    ██        █        █        █
-█                ██        █        █            ██████
-                                █    ████    ██            ██    ██
-███████    ██    ██████    █    ██    ██
-█                    █    █            ███    █            ██    ██
-█    ███    █    ████        █    ██████    ██
-█    ███    █                █            ███    ███
-█    ███    █    ███        █    █    █        █            █
-█                    █    █    ██            ███        █        █
-███████    ███    █            ████            ██",
-        guess_word_plane_center, 
-        2, 
-        Clip.NONE)
