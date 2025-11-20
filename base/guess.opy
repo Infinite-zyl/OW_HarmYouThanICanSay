@@ -25,11 +25,13 @@ rule "猜词环节计时器":
 
 rule "发送集合进入提问环节":
     @Event eachPlayer
-    @Condition guessing_active == false
     @Condition isGameInProgress() == true
+    @Condition guessing_active == false
     @Condition eventPlayer.guess_word_timer == 0
     @Condition eventPlayer.player_last_word != "使用交流菜单里的指令"
     @Condition eventPlayer.isCommunicating(Comms.GROUP_UP) == true
+
+    pauseMatchTime()
 
     guessing_active = true
     guessing_part = GuessingPart.QA
@@ -71,6 +73,14 @@ rule "退出猜词环节恢复玩家状态":
     eventPlayer.clearStatusEffect(Status.INVINCIBLE)
     eventPlayer.stopCamera()
     eventPlayer.enableHeroHud()
+
+rule "退出猜词环节，恢复比赛时间":
+    @Condition guessing_active == false
+    @Condition isGameInProgress() == true
+
+    pauseMatchTime()
+    wait(0.25)
+    unpauseMatchTime()
 
 rule "时间耗尽进入下 注环节/猜词环节":
     @Condition guessing_active == true
@@ -158,13 +168,12 @@ rule "猜词环节击杀判定":
 
     # 延迟判定
     wait(1.4)
-    if guess_word_result == GuessResult.SUCCESS and eventPlayer != current_guesser:
+    if guess_word_result == GuessResult.SUCCESS and eventPlayer.getTeam() != current_guesser.getTeam():
         illegal_kill()
     if guess_word_result == GuessResult.SUCCESS and eventPlayer == current_guesser:
         eventPlayer.player_word = random.choice(all_words)
-        eventPlayer.addToScore(PointsEnum.GUESS_CORRECTLY)
-    if guess_word_result == GuessResult.FAILURE and eventPlayer == current_guesser:
-        eventPlayer.addToScore(PointsEnum.GUESS_WRONG)
+        addToTeamScore(eventPlayer.getTeam(), PointsEnum.GUESS_CORRECTLY)
+    if guess_word_result == GuessResult.FAILURE and eventPlayer.getTeam() == current_guesser.getTeam():
         illegal_kill()
 
 rule "时间耗尽扣分":
@@ -175,7 +184,7 @@ rule "时间耗尽扣分":
     @Condition guess_timmer == 0
     @Condition guessing_part == GuessingPart.GUESSING
 
-    eventPlayer.addToScore(PointsEnum.TIMEOUT)
+    addToTeamScore(eventPlayer.getTeam(), PointsEnum.TIMEOUT)
     illegal_kill()
 
 rule "正常结束猜词环节":

@@ -1,13 +1,5 @@
 #!mainFile "../main.opy"
 
-# rule "游戏结束条件":
-#     @Event eachPlayer
-#     @Condition isGameInProgress() == true
-#     @Condition eventPlayer.getScore() >= finish_score
-    
-#     declarePlayerVictory(eventPlayer)
-
-
 rule "自动重开":
     @Condition isMatchComplete() == true
     
@@ -33,11 +25,11 @@ rule "按下互动绑定":
     @Event eachPlayer
     @Condition guessing_active == false
     @Condition eventPlayer.isHoldingButton(Button.INTERACT) == true
-    @Condition eventPlayer.getRealPlayerClosestToReticle(Team.ALL) != null
-    @Condition isInLoS(eventPlayer, eventPlayer.getRealPlayerClosestToReticle(Team.ALL)) == true
+    @Condition eventPlayer.getRealPlayerClosestToReticle(getOppositeTeam(eventPlayer.getTeam())) != null
+    @Condition isInLoS(eventPlayer, eventPlayer.getRealPlayerClosestToReticle(getOppositeTeam(eventPlayer.getTeam()))) == true
 
     # 找到新的绑定目标
-    eventPlayer.bind_new_target = eventPlayer.getRealPlayerClosestToReticle(Team.ALL)
+    eventPlayer.bind_new_target = eventPlayer.getRealPlayerClosestToReticle(getOppositeTeam(eventPlayer.getTeam()))
 
     # 如果已有绑定对象，先解除旧绑定
     if eventPlayer.bind_target != "":
@@ -53,8 +45,8 @@ rule "小字体提示先绑定再互动":
     @Event eachPlayer
     @Condition guessing_active == false
     @Condition eventPlayer.bind_target == ""
-    @Condition eventPlayer.getRealPlayerClosestToReticle(Team.ALL) != null
-    @Condition isInLoS(eventPlayer, eventPlayer.getRealPlayerClosestToReticle(Team.ALL)) == true
+    @Condition eventPlayer.getRealPlayerClosestToReticle(getOppositeTeam(eventPlayer.getTeam())) != null
+    @Condition isInLoS(eventPlayer, eventPlayer.getRealPlayerClosestToReticle(getOppositeTeam(eventPlayer.getTeam()))) == true
 
     wait(5)
     if not ruleCondition:
@@ -69,8 +61,8 @@ rule "玩家违规死亡处理":
     @Event eachPlayer
     @Condition eventPlayer.bind_target.bind_kill == true
 
-    eventPlayer.addToScore(PointsEnum.BIND_KILL_REWARD)
-    smallMessage(eventPlayer, "获得积分【 {} 】".format(PointsEnum.BIND_KILL_REWARD))
+    addToTeamScore(eventPlayer.getTeam(), PointsEnum.BIND_KILL_REWARD)
+    smallMessage(eventPlayer, "团队积分【 {} 】".format(PointsEnum.BIND_KILL_REWARD))
     eventPlayer.bind_target = ""
 
 rule "存活计时器":
@@ -90,8 +82,8 @@ rule "存活积分":
     @Condition eventPlayer.survival_timer != 0
     @Condition eventPlayer.survival_timer % 60 == 0
     
-    eventPlayer.addToScore(1)
-    smallMessage(eventPlayer, "存活一分钟，获得积分【 {} 】".format(PointsEnum.SURVIVAL_POINT))
+    addToTeamScore(eventPlayer.getTeam(), PointsEnum.SURVIVAL_POINT)
+    smallMessage(eventPlayer, "存活一分钟，团队积分【 {} 】".format(PointsEnum.SURVIVAL_POINT))
 
 rule "换词条计时器":
     @Event eachPlayer
@@ -112,12 +104,12 @@ rule "词条更换":
     @Condition eventPlayer.hasSpawned() == true
     @Condition eventPlayer.change_word_timer == 0 # 冷却结束
     @Condition eventPlayer.isHoldingButton(Button.MELEE) == true
-    @Condition eventPlayer.getRealPlayerClosestToReticle(Team.ALL) != null
-    @Condition isInLoS(eventPlayer, eventPlayer.getRealPlayerClosestToReticle(Team.ALL)) == true
+    @Condition eventPlayer.getRealPlayerClosestToReticle(getOppositeTeam(eventPlayer.getTeam())) != null
+    @Condition isInLoS(eventPlayer, eventPlayer.getRealPlayerClosestToReticle(getOppositeTeam(eventPlayer.getTeam()))) == true
 
-    eventPlayer.getRealPlayerClosestToReticle(Team.ALL).player_last_word = eventPlayer.getRealPlayerClosestToReticle(Team.ALL).player_word
-    eventPlayer.getRealPlayerClosestToReticle(Team.ALL).player_word = random.choice(all_words)
-    smallMessage(eventPlayer.getRealPlayerClosestToReticle(Team.ALL), "小心！有人更换了你的词条！")
+    eventPlayer.getRealPlayerClosestToReticle(getOppositeTeam(eventPlayer.getTeam())).player_last_word = eventPlayer.getRealPlayerClosestToReticle(getOppositeTeam(eventPlayer.getTeam())).player_word
+    eventPlayer.getRealPlayerClosestToReticle(getOppositeTeam(eventPlayer.getTeam())).player_word = random.choice(all_words)
+    smallMessage(eventPlayer.getRealPlayerClosestToReticle(getOppositeTeam(eventPlayer.getTeam())), "小心！有人更换了你的词条！")
 
     eventPlayer.change_word_timer = change_word_cd # 重置词条更换计时器
 

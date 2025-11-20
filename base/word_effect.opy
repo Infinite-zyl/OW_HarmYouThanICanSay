@@ -11,7 +11,7 @@ def illegal_kill():
     eventPlayer.guess_word_timer = guess_word_cd # 猜词计时器初始化为设定值
 
     kill(eventPlayer)
-    eventPlayer.addToScore(PointsEnum.ILLEGAL_KILL) # 违规动作扣分
+    addToTeamScore(eventPlayer.getTeam(), PointsEnum.ILLEGAL_KILL)
     # 对DVA单独处理
     if eventPlayer.getHero() == Hero.DVA:
         wait(1)
@@ -166,7 +166,7 @@ rule "攻击距离自身3m以内的敌人":
     @Event playerDealtDamage
     @Condition guessing_active == false
     @Condition eventPlayer.player_word == "攻击距离自身{}m以内的敌人".format(WordNumber.ENEMYDISTANCEIN)
-    @Condition victim in getPlayersInRadius(eventPlayer, WordNumber.ENEMYDISTANCEIN, Team.ALL, LosCheck.SURFACES) == true
+    @Condition victim in getPlayersInRadius(eventPlayer, WordNumber.ENEMYDISTANCEIN, Color.LIME_GREEN, LosCheck.SURFACES) == true
 
     illegal_kill()
 
@@ -417,7 +417,7 @@ rule "靠近一名敌人":
     @Event eachPlayer
     @Condition guessing_active == false
     @Condition eventPlayer.player_word == "靠近一名敌人"
-    @Condition distance(eventPlayer, getRealClosestPlayer(eventPlayer, Team.ALL)) <= 3
+    @Condition distance(eventPlayer, getRealClosestPlayer(eventPlayer, Color.LIME_GREEN)) <= 3
     
     illegal_kill()
 
@@ -451,8 +451,8 @@ rule "凝视敌人超过五秒":
     @Event eachPlayer
     @Condition guessing_active == false
     @Condition eventPlayer.player_word == "凝视敌人超过{}秒".format(WordNumber.STAREENEMY)
-    @Condition eventPlayer.isInViewAngle(eventPlayer.getRealPlayerClosestToReticle(Team.ALL), 20) == true
-    @Condition isInLoS(eventPlayer, eventPlayer.getRealPlayerClosestToReticle(Team.ALL)) == true
+    @Condition eventPlayer.isInViewAngle(eventPlayer.getRealPlayerClosestToReticle(Color.LIME_GREEN), 20) == true
+    @Condition isInLoS(eventPlayer, eventPlayer.getRealPlayerClosestToReticle(Color.LIME_GREEN)) == true
     
     eventPlayer.conditionJudgment(WordNumber.STAREENEMY)
     illegal_kill()
@@ -497,6 +497,8 @@ rule "周围有3名以上的敌人":
     @Condition len([player for player in getAllPlayers() if distance(eventPlayer.getPosition(), player.getPosition()) <= 2]) >= 3
 
     illegal_kill()
+
+# TODO 更新词条
 
 # 状态类
 rule "被入侵":

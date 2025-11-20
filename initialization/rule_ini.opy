@@ -3,11 +3,13 @@
 rule "完成条件初始化":
     @Condition isGameInProgress()
     
-    disableInspector()
+    # disableInspector()
     disableScoring()
     # disableGamemodeCompletion()
-    pauseMatchTime()
-    setMatchTime(600)
+    # pauseMatchTime()
+    setTeamScore(Team.ALL, 10)
+    setObjectiveDescription(getAllPlayers(), "不要做挑战", HudReeval.VISIBILITY_AND_STRING)
+
     
 rule "集结时间初始化":
     @Condition isAssemblingHeroes() == true
@@ -20,13 +22,13 @@ rule "全局变量初始化":
     guessing_part = GuessingPart.NONE # 猜词环节阶段初始化为无
     current_guesser = "" # 当前猜词玩家初始化为空字符串
 
+
 rule "玩家变量初始化":
     @Event eachPlayer
     @Condition isGameInProgress()
     
     eventPlayer.tutorial_flag = true # 教程默认为开
 
-    eventPlayer.setScore(10) # 玩家分数初始化为10
     eventPlayer.player_dealt_damage_flag = false # 玩家是否造成伤害标记初始化为假
     eventPlayer.player_injured_flag = false # 玩家受到伤害标记初始化为假
     eventPlayer.damage_amount = 0 # 玩家造成的伤害量初始化为0
